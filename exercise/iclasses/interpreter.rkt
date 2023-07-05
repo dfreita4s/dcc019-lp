@@ -34,7 +34,7 @@
     [(ast:block stmts) (display "block unimplemented")]
     [(ast:if-stmt e s1 s2) (display "if statment unimplemented")]
     [(ast:while e s) (display "while unimplemented")]
-    [(ast:local-decl (ast:var x) s) (display "local var declaration unimplemented")]
+    [(ast:local-decl (ast:var x) s) (result-of s x) ]
     [(ast:send e (ast:var mth) args) (display "command send unimplemented")]
     [(ast:super (ast:var c) args) (display "command super unimplemented")]
     [e (raise-user-error "unimplemented-construction: " e)]
@@ -48,4 +48,12 @@
        ; you must collect all the classes declared and building its respectively environment
        ; execute the prog expression in the correct environment
        (result-of stmt init-env))]))
+
+
+(struct class (super fields env) #:transparent)
+(struct method (params body) #:transparent)
+(struct object (class fields) #:transparent)
+
+(define c1 (class 1 2 3))
+;(class-fields c1)
 
