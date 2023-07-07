@@ -27,14 +27,13 @@
 ; result-of :: Stmt -> Env -> State -> State
 (define (result-of stmt Δ)
   (match stmt
-    [(ast:assign (ast:var x) e) (value-of e Δ) #;(result-of e Δ)]
+    [(ast:assign (ast:var x) e) (extend-env x (value-of e Δ) Δ)]
     [(ast:print e) (display (value-of e Δ))
                    #;(display "print unimplemented")]
     [(ast:return e) (value-of e Δ)]
     [(ast:block stmts) (foldl (lambda (lstmts lΔ)
-                                (display "passou\n")
                                 (result-of lstmts lΔ)) Δ stmts)]
-    [(ast:if-stmt e s1 s2) (display "if statment unimplemented")]
+    [(ast:if-stmt e s1 s2) (if (value-of e Δ) (result-of s1 Δ) (result-of s2 Δ)) #;(display "if statment unimplemented")]
     [(ast:while e s) (display "while unimplemented")]
     [(ast:local-decl (ast:var x) s) (result-of s x) ]
     [(ast:send e (ast:var mth) args) (display "command send unimplemented")]
@@ -48,7 +47,8 @@
     [(ast:prog decls stmt)
      (begin
        ;funcao pra buscar no decls o que tem na classe
-
+       ;(display stmt)
+       
        ; you must collect all the classes declared and building its respectively environment
        ; execute the prog expression in the correct environment
        (result-of stmt init-env))]))
